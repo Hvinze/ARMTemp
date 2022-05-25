@@ -98,14 +98,6 @@
             ],
             "type": "String"
         },
-        "SoftDelete": {
-            "defaultValue": "false",
-            "allowedValues": [
-                "true",
-                "false"
-            ],
-            "type": "String"
-        },
         "softDeleteRetentionInDays": {
             "defaultValue": 90,
             "type": "Int"
@@ -150,6 +142,7 @@
             },
             "properties": {
                 "mode": "Incremental",
+                "enablePurgeProtection": true,
                 "enabledForDeployment": "[parameters('enabledForDeployment')]",
                 "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
                 "enabledForDiskEncryption": "[parameters('AzureDiskEncryptionForVolumeEncryption')]",
@@ -204,7 +197,7 @@
                     "name": "[parameters('pricingTier')]",
                     "family": "A"
                 },
-                "enableSoftDelete": "[parameters('SoftDelete')]",
+                "enableSoftDelete": true,
                 "softDeleteRetentionInDays": "[parameters('softDeleteRetentionInDays')]",
                 "networkAcls": {
                     "value": {
