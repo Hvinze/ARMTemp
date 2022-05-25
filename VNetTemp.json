@@ -1,0 +1,154 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualNetworkName": {
+            "type": "String",
+            "metadata": {
+                "description": "The name of the virtual network."
+            }
+        },
+        "networkSecurityGroupName": {
+            "defaultValue": "nsg-sn-10.0.1.0_24",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the network security group."
+            }
+        },
+        "location": {
+            "defaultValue": "[resourceGroup().location]",
+            "allowedValues": [
+                "eastus",
+                "eastus2",
+                "southcentralus",
+                "westus2",
+                "australiaeast",
+                "southeastasia",
+                "northeurope",
+                "uksouth",
+                "westeurope",
+                "centralus",
+                "northcentralus",
+                "westus",
+                "southafricanorth",
+                "centralindia",
+                "eastasia",
+                "japaneast",
+                "koreacentral",
+                "canadacentral",
+                "francecentral",
+                "germanywestcentral",
+                "norwayeast",
+                "switzerlandnorth",
+                "uaenorth",
+                "brazilsouth",
+                "westcentralus",
+                "australiacentral",
+                "australiasoutheast",
+                "japanwest",
+                "koreasouth",
+                "southindia",
+                "westindia",
+                "canadaeast",
+                "ukwest"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Location of the virtual network."
+            }
+        },
+        "addressSpace": {
+            "type": "String",
+            "metadata": {
+                "description": "The virtual network's address space in CIDR notation (e.g. 192.168.1.0/24)."
+            }
+        },
+        "subnetName-1": {
+            "type": "String",
+            "metadata": {
+                "description": "The name of the subnet."
+            }
+        },
+        "subnetCidr-1": {
+            "type": "String",
+            "metadata": {
+                "description": "Cidr range for the subnet."
+            }
+        },
+        "subnetName-2": {
+            "type": "String",
+            "metadata": {
+                "description": "The name of the subnet."
+            }
+        },
+        "subnetCidr-2": {
+            "type": "String",
+            "metadata": {
+                "description": "Cidr range for the subnet."
+            }
+        },
+        "ServiceOwner": {
+            "type": "String",
+            "metadata": {
+                "description": "The owner of resource."
+            }
+        },
+        "Type": {
+            "type": "String",
+            "metadata": {
+                "description": "The type of the resource."
+            }
+        },
+        "Environment": {
+            "allowedValues": [
+                "dev",
+                "test",
+                "pre-prod",
+                "prod"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "The environment of the resource."
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/VirtualNetworks",
+            "apiVersion": "2019-09-01",
+            "name": "[parameters('virtualNetworkName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [],
+            "tags": {
+                "Owner": "[parameters('ServiceOwner')]",
+                "Type": "[parameters('Type')]",
+                "Enviornment": "[parameters('Environment')]"
+            },
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('addressSpace')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[parameters('subnetName-1')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnetCidr-1')]"
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnetName-2')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('subnetCidr-2')]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
